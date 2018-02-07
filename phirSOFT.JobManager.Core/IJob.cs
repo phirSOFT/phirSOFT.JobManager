@@ -15,6 +15,11 @@ namespace phirSOFT.JobManager.Core
         bool SupportPausing { get; }
 
         /// <summary>
+        /// Determines wheter this job can display a progress.
+        /// </summary>
+        bool SupportProgress { get; }
+
+        /// <summary>
         /// Gets the progress of the job in percent (if supported).
         /// </summary>
         double Progress { get; }
