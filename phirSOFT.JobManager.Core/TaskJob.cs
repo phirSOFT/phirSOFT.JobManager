@@ -10,8 +10,8 @@ namespace phirSOFT.JobManager.Core
 {
     public sealed class TaskJob : IJob, INotifyPropertyChanged
     {
-        private readonly Task _internalTask;
         private readonly CancellationTokenSource _cts;
+        private readonly Task _internalTask;
         private readonly PauseTokenSource _pts;
         private string _description;
         private double _progress;

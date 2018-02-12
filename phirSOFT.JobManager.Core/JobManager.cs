@@ -31,8 +31,7 @@ namespace phirSOFT.JobManager.Core
             _statusConverter = new JobStatusComparator();
         }
 
-        [PublicAPI]
-        public EventHandler JobFinishedHandler { get; set; }
+        [PublicAPI] public EventHandler JobFinishedHandler { get; set; }
 
         public double OverallProgress
         {
