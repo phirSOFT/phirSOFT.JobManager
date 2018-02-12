@@ -8,7 +8,6 @@ using phirSOFT.JobManager.Core.Annotations;
 
 namespace phirSOFT.JobManager.Wpf
 {
-    
     [PublicAPI]
     public class JobManagerStatus
     {
