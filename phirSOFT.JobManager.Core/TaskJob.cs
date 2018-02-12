@@ -8,11 +8,11 @@ using phirSOFT.JobManager.Core.Annotations;
 
 namespace phirSOFT.JobManager.Core
 {
-    public class TaskJob : IJob, INotifyPropertyChanged
+    public sealed class TaskJob : IJob, INotifyPropertyChanged
     {
         private readonly Task _internalTask;
-        private readonly CancellationTokenSource cts;
-        private readonly PauseTokenSource pts;
+        private readonly CancellationTokenSource _cts;
+        private readonly PauseTokenSource _pts;
         private string _description;
         private double _progress;
 
@@ -21,12 +21,12 @@ namespace phirSOFT.JobManager.Core
         {
             _internalTask = task;
             SupportProgress = supportProgress;
-            cts = cancellationTokenSource;
-            pts = pauseTokenSource;
+            _cts = cancellationTokenSource;
+            _pts = pauseTokenSource;
         }
 
-        public bool SupportCancellation => cts != null;
-        public bool SupportPausing => pts != null;
+        public bool SupportCancellation => _cts != null;
+        public bool SupportPausing => _pts != null;
         public bool SupportProgress { get; }
 
         public double Progress
@@ -54,7 +54,7 @@ namespace phirSOFT.JobManager.Core
                     case TaskStatus.WaitingForActivation:
                     case TaskStatus.WaitingForChildrenToComplete:
                     case TaskStatus.WaitingToRun:
-                        return pts.IsPaused ? JobStatus.Paused : JobStatus.Running;
+                        return _pts.IsPaused ? JobStatus.Paused : JobStatus.Running;
 
                     case TaskStatus.RanToCompletion:
                         return JobStatus.Succeded;
@@ -77,30 +77,30 @@ namespace phirSOFT.JobManager.Core
             }
         }
 
-        public bool CanCancel => cts != null;
-        public bool CanPause => pts != null && !pts.IsPaused;
-        public bool CanResume => pts != null && !pts.IsPaused;
+        public bool CanCancel => _cts != null;
+        public bool CanPause => _pts != null && !_pts.IsPaused;
+        public bool CanResume => _pts != null && !_pts.IsPaused;
 
         public void Cancel()
         {
-            cts.Cancel();
+            _cts.Cancel();
         }
 
         public void Pause()
         {
-            pts.IsPaused = true;
+            _pts.IsPaused = true;
         }
 
         public void Resume()
         {
-            pts.IsPaused = false;
+            _pts.IsPaused = false;
         }
 
         public event EventHandler Finished;
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

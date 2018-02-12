@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using phirSOFT.JobManager.Core.Annotations;
 
 namespace phirSOFT.JobManager.Core
 {
+    [PublicAPI]
     public interface IJobManager : IReadOnlyCollection<IJob>
     {
         /// <summary>

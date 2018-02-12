@@ -11,7 +11,7 @@ using phirSOFT.JobManager.Core.Annotations;
 
 namespace phirSOFT.JobManager.Core
 {
-    public class JobManager : IJobManager, INotifyPropertyChanged, INotifyCollectionChanged
+    public sealed class JobManager : IJobManager, INotifyPropertyChanged, INotifyCollectionChanged
     {
         private readonly HashSet<IJob> _registredJobs;
         private readonly ReaderWriterLockSlim _registredJobsLock;
@@ -31,7 +31,7 @@ namespace phirSOFT.JobManager.Core
             _statusConverter = new JobStatusComparator();
         }
 
-
+        [PublicAPI]
         public EventHandler JobFinishedHandler { get; set; }
 
         public double OverallProgress
@@ -155,19 +155,19 @@ namespace phirSOFT.JobManager.Core
             }
         }
 
-        protected virtual void Job_Finished(object sender, EventArgs e)
+        private void Job_Finished(object sender, EventArgs e)
         {
             JobFinishedHandler(sender, e);
         }
 
-        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             CollectionChanged?.Invoke(this, e);
             OnPropertyChanged(nameof(Count));
         }
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
