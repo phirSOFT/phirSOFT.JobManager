@@ -4,9 +4,12 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Shell;
 using phirSOFT.JobManager.Core;
+using phirSOFT.JobManager.Core.Annotations;
 
 namespace phirSOFT.JobManager.Wpf
 {
+    
+    [PublicAPI]
     public class JobManagerStatus
     {
         public static readonly DependencyProperty JobManagerProperty = DependencyProperty.RegisterAttached(
@@ -38,11 +41,11 @@ namespace phirSOFT.JobManager.Wpf
                     else
                         Items[old].Remove(info);
 
-                if (@new != null)
-                    if (Items.ContainsKey(@new))
-                        Items.Add(@new, new List<TaskbarItemInfo> {info});
-                    else
-                        Items[@new].Add(info);
+                if (@new == null) return;
+                if (Items.ContainsKey(@new))
+                    Items.Add(@new, new List<TaskbarItemInfo> {info});
+                else
+                    Items[@new].Add(info);
             }
         }
 
