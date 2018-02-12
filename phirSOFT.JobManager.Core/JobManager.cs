@@ -5,7 +5,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using phirSOFT.JobManager.Core.Annotations;
@@ -25,13 +24,12 @@ namespace phirSOFT.JobManager.Core
 
             JobFinishedHandler = (sender, args) =>
             {
-                if (((IJob)sender).Status == JobStatus.Succeded)
-                    DeregisterJob((IJob)sender);
+                if (((IJob) sender).Status == JobStatus.Succeded)
+                    DeregisterJob((IJob) sender);
             };
 
             _statusConverter = new JobStatusComparator();
         }
-
 
 
         public EventHandler JobFinishedHandler { get; set; }
@@ -133,7 +131,7 @@ namespace phirSOFT.JobManager.Core
 
         private void OnJobPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var job = (IJob)sender;
+            var job = (IJob) sender;
 
             switch (e.PropertyName)
             {
@@ -152,6 +150,7 @@ namespace phirSOFT.JobManager.Core
                         OnPropertyChanged(nameof(CanDisplayOverallProgress));
                         OnPropertyChanged(nameof(OverallProgress));
                     }
+
                     break;
             }
         }

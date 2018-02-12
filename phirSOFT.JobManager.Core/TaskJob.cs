@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Nito.AsyncEx;
@@ -12,19 +10,21 @@ namespace phirSOFT.JobManager.Core
 {
     public class TaskJob : IJob, INotifyPropertyChanged
     {
+        private readonly Task _internalTask;
         private readonly CancellationTokenSource cts;
         private readonly PauseTokenSource pts;
-        private readonly Task _internalTask;
         private string _description;
-        private double _progress = 0;
+        private double _progress;
 
-        public TaskJob(Task task, bool supportProgress = false, CancellationTokenSource cancellationTokenSource = null, PauseTokenSource pauseTokenSource = null)
+        public TaskJob(Task task, bool supportProgress = false, CancellationTokenSource cancellationTokenSource = null,
+            PauseTokenSource pauseTokenSource = null)
         {
             _internalTask = task;
             SupportProgress = supportProgress;
             cts = cancellationTokenSource;
             pts = pauseTokenSource;
         }
+
         public bool SupportCancellation => cts != null;
         public bool SupportPausing => pts != null;
         public bool SupportProgress { get; }
@@ -80,6 +80,7 @@ namespace phirSOFT.JobManager.Core
         public bool CanCancel => cts != null;
         public bool CanPause => pts != null && !pts.IsPaused;
         public bool CanResume => pts != null && !pts.IsPaused;
+
         public void Cancel()
         {
             cts.Cancel();

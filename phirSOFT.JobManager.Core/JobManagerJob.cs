@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
 using phirSOFT.JobManager.Core.Annotations;
 
 namespace phirSOFT.JobManager.Core
@@ -33,6 +31,7 @@ namespace phirSOFT.JobManager.Core
                     }
                 };
         }
+
         public bool SupportCancellation { get; } = false;
         public bool SupportPausing { get; } = false;
         public bool SupportProgress => _manager.CanDisplayOverallProgress;
@@ -43,6 +42,7 @@ namespace phirSOFT.JobManager.Core
         public bool CanCancel { get; } = false;
         public bool CanPause { get; } = false;
         public bool CanResume { get; } = false;
+
         public void Cancel()
         {
             throw new NotImplementedException();
