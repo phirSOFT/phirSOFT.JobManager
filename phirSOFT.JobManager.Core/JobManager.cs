@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using phirSOFT.JobManager.Core.Annotations;
@@ -13,19 +16,75 @@ namespace phirSOFT.JobManager.Core
     {
         private readonly HashSet<IJob> _registredJobs;
         private readonly ReaderWriterLockSlim _registredJobsLock;
-        private readonly object _handlerLock;
+        private readonly IComparer<JobStatus> _statusConverter;
+
+        public JobManager()
+        {
+            _registredJobs = new HashSet<IJob>();
+            _registredJobsLock = new ReaderWriterLockSlim();
+
+            JobFinishedHandler = (sender, args) =>
+            {
+                if (((IJob)sender).Status == JobStatus.Succeded)
+                    DeregisterJob((IJob)sender);
+            };
+
+            _statusConverter = new JobStatusComparator();
+        }
+
+
 
         public EventHandler JobFinishedHandler { get; set; }
 
-        public double OverallProgress => throw new System.NotImplementedException();
+        public double OverallProgress
+        {
+            get
+            {
+                _registredJobsLock.EnterReadLock();
+                var result = _registredJobs.Where(job => job.Status == OverallStatus && job.SupportProgress)
+                    .Average(job => job.Progress);
+                _registredJobsLock.ExitReadLock();
+                return result;
+            }
+        }
 
-        public bool CanDisplayOverallProgress => throw new System.NotImplementedException();
+        public bool CanDisplayOverallProgress
+        {
+            get
+            {
+                _registredJobsLock.EnterReadLock();
+                var result = _registredJobs.Any(job => job.Status == OverallStatus && job.SupportProgress);
+                _registredJobsLock.ExitReadLock();
+                return result;
+            }
+        }
 
-        public JobStatus OverallStatus => throw new System.NotImplementedException();
+        public JobStatus OverallStatus
+        {
+            get
+            {
+                _registredJobsLock.EnterReadLock();
+                JobStatus max;
+                using (var enumerator = _registredJobs.GetEnumerator())
+                {
+                    if (!enumerator.MoveNext())
+                        return JobStatus.Succeded;
+
+                    Debug.Assert(enumerator.Current != null, "enumerator.Current != null");
+                    max = enumerator.Current.Status;
+                    while (enumerator.MoveNext())
+                    {
+                        Debug.Assert(enumerator.Current != null, "enumerator.Current != null");
+                        if (_statusConverter.Compare(max, enumerator.Current.Status) < 0)
+                            max = enumerator.Current.Status;
+                    }
+                }
+
+                return max;
+            }
+        }
 
         public int Count => _registredJobs.Count;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public void DeregisterJob(IJob job)
         {
@@ -38,18 +97,12 @@ namespace phirSOFT.JobManager.Core
 
             if (job is INotifyPropertyChanged notify)
                 notify.PropertyChanged -= OnJobPropertyChanged;
-                
-        }
-
-        private void OnJobPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         public IEnumerator<IJob> GetEnumerator()
         {
             _registredJobsLock.EnterReadLock();
-            var enumerator =  _registredJobs.GetEnumerator();
+            var enumerator = _registredJobs.GetEnumerator();
             _registredJobsLock.ExitReadLock();
 
             return enumerator;
@@ -69,17 +122,44 @@ namespace phirSOFT.JobManager.Core
                 notify.PropertyChanged += OnJobPropertyChanged;
         }
 
-        protected virtual void Job_Finished(object sender, EventArgs e)
-        {
-            JobFinishedHandler(sender, e);
-        }
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnJobPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var job = (IJob)sender;
+
+            switch (e.PropertyName)
+            {
+                case nameof(IJob.Status):
+                    OnPropertyChanged(nameof(OverallStatus));
+                    OnPropertyChanged(nameof(OverallProgress));
+                    OnPropertyChanged(nameof(CanDisplayOverallProgress));
+                    break;
+                case nameof(IJob.Progress):
+                    if (job.Status == OverallStatus)
+                        OnPropertyChanged(nameof(OverallProgress));
+                    break;
+                case nameof(IJob.SupportProgress):
+                    if (job.Status == OverallStatus)
+                    {
+                        OnPropertyChanged(nameof(CanDisplayOverallProgress));
+                        OnPropertyChanged(nameof(OverallProgress));
+                    }
+                    break;
+            }
+        }
+
+        protected virtual void Job_Finished(object sender, EventArgs e)
+        {
+            JobFinishedHandler(sender, e);
+        }
 
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
