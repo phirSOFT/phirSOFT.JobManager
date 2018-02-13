@@ -11,12 +11,19 @@ using phirSOFT.JobManager.Core.Annotations;
 
 namespace phirSOFT.JobManager.Core
 {
+    /// <summary>
+    ///     Implements the <see cref="IJobManager" /> interface. In the default configuration this manager removes all
+    ///     sucessfull fininished jobs.
+    /// </summary>
     public sealed class JobManager : IJobManager, INotifyPropertyChanged, INotifyCollectionChanged
     {
         private readonly HashSet<IJob> _registredJobs;
         private readonly ReaderWriterLockSlim _registredJobsLock;
         private readonly IComparer<JobStatus> _statusConverter;
 
+        /// <summary>
+        ///     Creates a new instance of the <see cref="JobManager" /> class.
+        /// </summary>
         public JobManager()
         {
             _registredJobs = new HashSet<IJob>();
@@ -31,8 +38,13 @@ namespace phirSOFT.JobManager.Core
             _statusConverter = new JobStatusComparator();
         }
 
-        [PublicAPI] public EventHandler JobFinishedHandler { get; set; }
+        /// <summary>
+        ///     This handler is invokek, when a job finishes.
+        /// </summary>
+        [PublicAPI]
+        public EventHandler JobFinishedHandler { get; set; }
 
+        /// <inheritdoc />
         public double OverallProgress
         {
             get
@@ -45,6 +57,7 @@ namespace phirSOFT.JobManager.Core
             }
         }
 
+        /// <inheritdoc />
         public bool CanDisplayOverallProgress
         {
             get
@@ -56,6 +69,7 @@ namespace phirSOFT.JobManager.Core
             }
         }
 
+        /// <inheritdoc />
         public JobStatus OverallStatus
         {
             get
@@ -81,8 +95,10 @@ namespace phirSOFT.JobManager.Core
             }
         }
 
+        /// <inheritdoc />
         public int Count => _registredJobs.Count;
 
+        /// <inheritdoc />
         public void DeregisterJob(IJob job)
         {
             _registredJobsLock.EnterWriteLock();
@@ -96,6 +112,7 @@ namespace phirSOFT.JobManager.Core
                 notify.PropertyChanged -= OnJobPropertyChanged;
         }
 
+        /// <inheritdoc />
         public IEnumerator<IJob> GetEnumerator()
         {
             _registredJobsLock.EnterReadLock();
@@ -105,6 +122,7 @@ namespace phirSOFT.JobManager.Core
             return enumerator;
         }
 
+        /// <inheritdoc />
         public void RegisterJob(IJob job)
         {
             _registredJobsLock.EnterWriteLock();
@@ -124,8 +142,10 @@ namespace phirSOFT.JobManager.Core
             return GetEnumerator();
         }
 
+        /// <inheritdoc />
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
+        /// <inheritdoc />
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnJobPropertyChanged(object sender, PropertyChangedEventArgs e)

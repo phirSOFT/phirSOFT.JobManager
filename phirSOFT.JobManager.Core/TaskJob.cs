@@ -8,6 +8,9 @@ using phirSOFT.JobManager.Core.Annotations;
 
 namespace phirSOFT.JobManager.Core
 {
+    /// <summary>
+    ///     Wraps a <see cref="Task" /> into an <see cref="IJob" />
+    /// </summary>
     public sealed class TaskJob : IJob, INotifyPropertyChanged
     {
         private readonly CancellationTokenSource _cts;
@@ -16,6 +19,13 @@ namespace phirSOFT.JobManager.Core
         private string _description;
         private double _progress;
 
+        /// <summary>
+        ///     Wraps a <see cref="Task" /> into a <see cref="IJob" />
+        /// </summary>
+        /// <param name="task">The <see cref="Task" /> to wrap</param>
+        /// <param name="supportProgress">Returns wheter this task supports progress reporting.</param>
+        /// <param name="cancellationTokenSource">The cancellation tokensource to cancel the task.</param>
+        /// <param name="pauseTokenSource">The pause token soruce to pause the task</param>
         public TaskJob(Task task, bool supportProgress = false, CancellationTokenSource cancellationTokenSource = null,
             PauseTokenSource pauseTokenSource = null)
         {
@@ -25,10 +35,16 @@ namespace phirSOFT.JobManager.Core
             _pts = pauseTokenSource;
         }
 
+        /// <inheritdoc />
         public bool SupportCancellation => _cts != null;
+
+        /// <inheritdoc />
         public bool SupportPausing => _pts != null;
+
+        /// <inheritdoc />
         public bool SupportProgress { get; }
 
+        /// <inheritdoc />
         public double Progress
         {
             get => _progress;
@@ -40,6 +56,7 @@ namespace phirSOFT.JobManager.Core
             }
         }
 
+        /// <inheritdoc />
         public JobStatus Status
         {
             get
@@ -64,8 +81,10 @@ namespace phirSOFT.JobManager.Core
             }
         }
 
+        /// <inheritdoc />
         public string Title { get; set; }
 
+        /// <inheritdoc />
         public string Description
         {
             get => _description;
@@ -77,26 +96,37 @@ namespace phirSOFT.JobManager.Core
             }
         }
 
+        /// <inheritdoc />
         public bool CanCancel => _cts != null;
+
+        /// <inheritdoc />
         public bool CanPause => _pts != null && !_pts.IsPaused;
+
+        /// <inheritdoc />
         public bool CanResume => _pts != null && !_pts.IsPaused;
 
+        /// <inheritdoc />
         public void Cancel()
         {
             _cts.Cancel();
         }
 
+        /// <inheritdoc />
         public void Pause()
         {
             _pts.IsPaused = true;
         }
 
+        /// <inheritdoc />
         public void Resume()
         {
             _pts.IsPaused = false;
         }
 
+        /// <inheritdoc />
         public event EventHandler Finished;
+
+        /// <inheritdoc />
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
