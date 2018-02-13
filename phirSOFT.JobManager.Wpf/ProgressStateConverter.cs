@@ -41,7 +41,7 @@ namespace phirSOFT.JobManager.Wpf
                         Items[old].Remove(info);
 
                 if (@new == null) return;
-                if (Items.ContainsKey(@new))
+                if (!Items.ContainsKey(@new))
                     Items.Add(@new, new List<TaskbarItemInfo> {info});
                 else
                     Items[@new].Add(info);
