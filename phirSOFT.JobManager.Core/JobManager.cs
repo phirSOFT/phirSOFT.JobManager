@@ -49,8 +49,9 @@ namespace phirSOFT.JobManager.Core
         {
             get
             {
+                var status = OverallStatus;
                 _registredJobsLock.EnterReadLock();
-                var result = _registredJobs.Where(job => job.Status == OverallStatus && job.SupportProgress)
+                var result = _registredJobs.Where(job => job.Status == status && job.SupportProgress)
                     .Average(job => job.Progress);
                 _registredJobsLock.ExitReadLock();
                 return result;
@@ -62,8 +63,9 @@ namespace phirSOFT.JobManager.Core
         {
             get
             {
+                var status = OverallStatus;
                 _registredJobsLock.EnterReadLock();
-                var result = _registredJobs.Any(job => job.Status == OverallStatus && job.SupportProgress);
+                var result = _registredJobs.Any(job => job.Status == status && job.SupportProgress);
                 _registredJobsLock.ExitReadLock();
                 return result;
             }
