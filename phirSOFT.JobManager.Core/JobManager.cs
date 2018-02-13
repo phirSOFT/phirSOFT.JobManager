@@ -24,8 +24,8 @@ namespace phirSOFT.JobManager.Core
 
             JobFinishedHandler = (sender, args) =>
             {
-                if (((IJob) sender).Status == JobStatus.Succeded)
-                    DeregisterJob((IJob) sender);
+                if (((IJob)sender).Status == JobStatus.Succeded)
+                    DeregisterJob((IJob)sender);
             };
 
             _statusConverter = new JobStatusComparator();
@@ -67,7 +67,12 @@ namespace phirSOFT.JobManager.Core
                 using (var enumerator = _registredJobs.GetEnumerator())
                 {
                     if (!enumerator.MoveNext())
+                    {
+                        _registredJobsLock.ExitReadLock();
                         return JobStatus.Succeded;
+
+                    }
+
 
                     Debug.Assert(enumerator.Current != null, "enumerator.Current != null");
                     max = enumerator.Current.Status;
@@ -132,7 +137,7 @@ namespace phirSOFT.JobManager.Core
 
         private void OnJobPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var job = (IJob) sender;
+            var job = (IJob)sender;
 
             switch (e.PropertyName)
             {
