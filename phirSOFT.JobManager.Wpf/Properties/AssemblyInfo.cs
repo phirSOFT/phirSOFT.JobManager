@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("phirSOFT.JobManager.Wpf")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Wraps JobManager features for WPF")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("phirSOFT.JobManager.Wpf")]
+[assembly: AssemblyCompany("phirSOFT")]
+[assembly: AssemblyProduct("phirSOFT.JobManager")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
