@@ -2,6 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.1.0</Version>
+    <Authors>phirSOFT</Authors>
+    <Company>phirSOFT</Company>
+    <Product>phirSOFT.JobManager</Product>
+    <Description>A manager that tracks the progress of different jobs. And provides simple reporting functionality.</Description>
+    <Copyright>(c) phirSOFt 2018</Copyright>
+    <PackageTags>Job Task Manager Status</PackageTags>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/phirSOFT/phirSOFT.JobManager</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/phirSOFT/phirSOFT.JobManager</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/phirSOFT/phirSOFT.JobManager/blob/master/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
 
   <ItemGroup>
