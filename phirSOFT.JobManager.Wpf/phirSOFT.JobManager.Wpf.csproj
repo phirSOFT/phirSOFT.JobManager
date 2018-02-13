@@ -53,5 +53,8 @@
       <Name>phirSOFT.JobManager.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="phirSOFT.JobManager.Wpf.nuspec" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
