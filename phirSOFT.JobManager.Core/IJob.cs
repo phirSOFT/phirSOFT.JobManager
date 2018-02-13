@@ -3,6 +3,9 @@ using phirSOFT.JobManager.Core.Annotations;
 
 namespace phirSOFT.JobManager.Core
 {
+    /// <summary>
+    /// Describes an abstract job.
+    /// </summary>
     [PublicAPI]
     public interface IJob
     {
