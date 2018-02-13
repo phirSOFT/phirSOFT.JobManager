@@ -9,7 +9,7 @@ using phirSOFT.JobManager.Core.Annotations;
 namespace phirSOFT.JobManager.Core
 {
     /// <summary>
-    /// Wraps a <see cref="Task"/> into an <see cref="IJob"/>
+    ///     Wraps a <see cref="Task" /> into an <see cref="IJob" />
     /// </summary>
     public sealed class TaskJob : IJob, INotifyPropertyChanged
     {
@@ -20,9 +20,9 @@ namespace phirSOFT.JobManager.Core
         private double _progress;
 
         /// <summary>
-        /// Wraps a <see cref="Task"/> into a <see cref="IJob"/>
+        ///     Wraps a <see cref="Task" /> into a <see cref="IJob" />
         /// </summary>
-        /// <param name="task">The <see cref="Task"/> to wrap</param>
+        /// <param name="task">The <see cref="Task" /> to wrap</param>
         /// <param name="supportProgress">Returns wheter this task supports progress reporting.</param>
         /// <param name="cancellationTokenSource">The cancellation tokensource to cancel the task.</param>
         /// <param name="pauseTokenSource">The pause token soruce to pause the task</param>
@@ -35,16 +35,16 @@ namespace phirSOFT.JobManager.Core
             _pts = pauseTokenSource;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool SupportCancellation => _cts != null;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool SupportPausing => _pts != null;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool SupportProgress { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public double Progress
         {
             get => _progress;
@@ -56,7 +56,7 @@ namespace phirSOFT.JobManager.Core
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public JobStatus Status
         {
             get
@@ -81,10 +81,10 @@ namespace phirSOFT.JobManager.Core
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public string Title { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public string Description
         {
             get => _description;
@@ -96,37 +96,37 @@ namespace phirSOFT.JobManager.Core
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool CanCancel => _cts != null;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool CanPause => _pts != null && !_pts.IsPaused;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool CanResume => _pts != null && !_pts.IsPaused;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Cancel()
         {
             _cts.Cancel();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Pause()
         {
             _pts.IsPaused = true;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Resume()
         {
             _pts.IsPaused = false;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public event EventHandler Finished;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

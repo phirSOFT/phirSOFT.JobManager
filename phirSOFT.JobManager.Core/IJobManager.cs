@@ -4,7 +4,7 @@ using phirSOFT.JobManager.Core.Annotations;
 namespace phirSOFT.JobManager.Core
 {
     /// <summary>
-    /// Describes the interface of a job manager.
+    ///     Describes the interface of a job manager.
     /// </summary>
     [PublicAPI]
     public interface IJobManager : IReadOnlyCollection<IJob>
