@@ -78,7 +78,7 @@ namespace phirSOFT.JobManager.Core
                             max = enumerator.Current.Status;
                     }
                 }
-
+                _registredJobsLock.ExitReadLock();
                 return max;
             }
         }
