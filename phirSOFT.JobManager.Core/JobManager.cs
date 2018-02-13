@@ -128,7 +128,7 @@ namespace phirSOFT.JobManager.Core
         public void RegisterJob(IJob job)
         {
             _registredJobsLock.EnterWriteLock();
-            var contained = _registredJobs.Add(job);
+            var contained = !_registredJobs.Add(job);
             _registredJobsLock.ExitWriteLock();
 
             if (contained) return;
