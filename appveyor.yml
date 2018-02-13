@@ -33,3 +33,9 @@ deploy:
   force_update: true
   on:
     branch: master
+
+skip_commits:
+  files:
+   - appveyor.yml
+   - docs/*
+   - '*.md'
