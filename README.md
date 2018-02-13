@@ -1,7 +1,7 @@
 # phirSOFT.JobManager
 The phirSOFT job manager tracks a collection of background job and reports an accumulated status. A job can be a task or any other object that implements the `IJob` interface.
 
-##Packages
+## Packages
 
 | Package                  | Framewok          | BuildStatus                                                                                                                                            |
 |--------------------------|-------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
