@@ -17,7 +17,7 @@ namespace phirSOFT.JobManager.Core
     /// </summary>
     public sealed class JobManager : IJobManager, INotifyPropertyChanged, INotifyCollectionChanged
     {
-        private readonly HashSet<IJob> _registredJobs;
+        private readonly HashSet<WeakReference<IJob>> _registredJobs;
         private readonly ReaderWriterLockSlim _registredJobsLock;
         private readonly IComparer<JobStatus> _statusConverter;
 
@@ -26,7 +26,7 @@ namespace phirSOFT.JobManager.Core
         /// </summary>
         public JobManager()
         {
-            _registredJobs = new HashSet<IJob>();
+            _registredJobs = new HashSet<WeakReference<IJob>>();
             _registredJobsLock = new ReaderWriterLockSlim();
 
             JobFinishedHandler = (sender, args) =>
@@ -128,6 +128,8 @@ namespace phirSOFT.JobManager.Core
         public void RegisterJob(IJob job)
         {
             _registredJobsLock.EnterWriteLock();
+            var reference = new WeakReference<IJob>(job);
+           
             var contained = _registredJobs.Add(job);
             _registredJobsLock.ExitWriteLock();
 
